@@ -13,6 +13,8 @@ import org.aiwolf.common.net.GameSetting;
 import org.aiwolf.client.lib.ComingoutContentBuilder;
 import org.aiwolf.client.lib.Content;
 import org.aiwolf.client.lib.DivinedResultContentBuilder;
+import org.aiwolf.client.lib.EstimateContentBuilder;
+import org.aiwolf.client.lib.RequestContentBuilder;
 import org.aiwolf.client.lib.VoteContentBuilder;
 
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ public class HowlsSeer extends HowlsBasePlayer {
 	boolean houkoku = true;
 	boolean pos;
 	boolean update_sh = true;
+	
+	double ContentRand;
 	
 	Judge divination;
 	Parameters params;
@@ -161,7 +165,8 @@ public class HowlsSeer extends HowlsBasePlayer {
 				return (new Content(new ComingoutContentBuilder(me, Role.SEER))).getText();
 			}
 			else {
-				if (black) {
+				ContentRand = Math.random();
+				if (black && ContentRand > 0.5) {
 					doCO = true;
 					return (new Content(new ComingoutContentBuilder(me, Role.SEER))).getText();
 				}
@@ -174,7 +179,7 @@ public class HowlsSeer extends HowlsBasePlayer {
 				return (new Content(new DivinedResultContentBuilder(currentGameInfo.getAgentList().get(target), black ? Species.WEREWOLF : Species.HUMAN))).getText();
 			}
 			else {
-				if (black) {
+				if (black && doCO) {
 					houkoku = true;
 					return (new Content(new DivinedResultContentBuilder(currentGameInfo.getAgentList().get(target), black ? Species.WEREWOLF : Species.HUMAN))).getText();
 				}
@@ -189,7 +194,16 @@ public class HowlsSeer extends HowlsBasePlayer {
 		}
 		else {
 			voteCandidate = currentGameInfo.getAgentList().get(c);
-			return (new Content(new VoteContentBuilder(voteCandidate))).getText();
+			ContentRand = Math.random();
+			if (ContentRand <= 0.3) {
+				return (new Content(new VoteContentBuilder(voteCandidate))).getText();
+			}
+			else if (ContentRand > 0.3 && ContentRand <= 0.7) {
+				return (new Content(new EstimateContentBuilder(voteCandidate, Role.WEREWOLF))).getText();
+			}
+			else {
+				return (new Content(new RequestContentBuilder(Content.ANY, new Content(new VoteContentBuilder(voteCandidate))))).getText();
+			}
 		}
 		
 	}

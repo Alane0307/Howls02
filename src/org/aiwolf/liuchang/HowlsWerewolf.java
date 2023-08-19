@@ -17,6 +17,8 @@ import org.aiwolf.client.lib.DivinedResultContentBuilder;
 import org.aiwolf.client.lib.EstimateContentBuilder;
 import org.aiwolf.client.lib.GuardedAgentContentBuilder;
 import org.aiwolf.client.lib.IdentContentBuilder;
+import org.aiwolf.client.lib.RequestContentBuilder;
+import org.aiwolf.client.lib.VoteContentBuilder;
 
 import java.util.ArrayList;
 
@@ -606,7 +608,16 @@ public class HowlsWerewolf extends HowlsBasePlayer {
 								}
 							}
 					voteCandidate = currentGameInfo.getAgentList().get(c);
-					return (new Content(new EstimateContentBuilder(voteCandidate, Role.WEREWOLF))).getText();
+					ContentRand = Math.random();
+					if (ContentRand <= 0.3) {
+						return (new Content(new VoteContentBuilder(voteCandidate))).getText();
+					}
+					else if (ContentRand > 0.3 && ContentRand <= 0.7) {
+						return (new Content(new EstimateContentBuilder(voteCandidate, Role.WEREWOLF))).getText();
+					}
+					else {
+						return (new Content(new RequestContentBuilder(Content.ANY, new Content(new VoteContentBuilder(voteCandidate))))).getText();
+					}
 				}
 			}
 		}
@@ -744,7 +755,16 @@ public class HowlsWerewolf extends HowlsBasePlayer {
 		}
 		else {
 			voteCandidate = currentGameInfo.getAgentList().get(c);
-			return (new Content(new EstimateContentBuilder(voteCandidate, Role.WEREWOLF))).getText();
+			ContentRand = Math.random();
+			if (ContentRand <= 0.3) {
+				return (new Content(new VoteContentBuilder(voteCandidate))).getText();
+			}
+			else if (ContentRand > 0.3 && ContentRand <= 0.7) {
+				return (new Content(new EstimateContentBuilder(voteCandidate, Role.WEREWOLF))).getText();
+			}
+			else {
+				return (new Content(new RequestContentBuilder(Content.ANY, new Content(new VoteContentBuilder(voteCandidate))))).getText();
+			}
 		}
 
 	}

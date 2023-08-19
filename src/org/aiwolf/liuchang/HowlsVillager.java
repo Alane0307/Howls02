@@ -14,6 +14,8 @@ import org.aiwolf.client.lib.ComingoutContentBuilder;
 import org.aiwolf.client.lib.Content;
 import org.aiwolf.client.lib.DivinedResultContentBuilder;
 import org.aiwolf.client.lib.EstimateContentBuilder;
+import org.aiwolf.client.lib.RequestContentBuilder;
+import org.aiwolf.client.lib.VoteContentBuilder;
 
 import java.util.ArrayList;
 
@@ -25,7 +27,7 @@ public class HowlsVillager extends HowlsBasePlayer {
 
 	boolean f = true;
 	boolean update_sh = true;
-	
+	double ContentRand;
 	Parameters params;
 	
 	@Override
@@ -131,7 +133,8 @@ public class HowlsVillager extends HowlsBasePlayer {
 			}
 		}
 		else {
-			if (day == 1 && sh.gamestate.turn == 1) {
+			ContentRand = Math.random();
+			if (day == 1 && sh.gamestate.turn == 1 && ContentRand > 0.5) {
 				return (new Content(new ComingoutContentBuilder(me, Role.SEER))).getText();
 			}
 			else {
@@ -140,7 +143,16 @@ public class HowlsVillager extends HowlsBasePlayer {
 				}
 				else {
 					voteCandidate = currentGameInfo.getAgentList().get(c);
-					return (new Content(new DivinedResultContentBuilder(voteCandidate, Species.WEREWOLF))).getText();
+					ContentRand = Math.random();
+					if (ContentRand <= 0.3) {
+						return (new Content(new VoteContentBuilder(voteCandidate))).getText();
+					}
+					else if (ContentRand > 0.3 && ContentRand <= 0.7) {
+						return (new Content(new EstimateContentBuilder(voteCandidate, Role.WEREWOLF))).getText();
+					}
+					else {
+						return (new Content(new RequestContentBuilder(Content.ANY, new Content(new VoteContentBuilder(voteCandidate))))).getText();
+					}
 				}
 			}
 		}

@@ -7,9 +7,11 @@ import org.aiwolf.common.data.Agent;
 import org.aiwolf.common.data.Role;
 import org.aiwolf.common.net.GameInfo;
 import org.aiwolf.common.net.GameSetting;
-
+import org.aiwolf.client.lib.ComingoutContentBuilder;
 import org.aiwolf.client.lib.Content;
 import org.aiwolf.client.lib.EstimateContentBuilder;
+import org.aiwolf.client.lib.RequestContentBuilder;
+import org.aiwolf.client.lib.VoteContentBuilder;
 
 import java.util.ArrayList;
 
@@ -23,6 +25,7 @@ public class HowlsBodyguard extends HowlsBasePlayer {
 	
 	boolean f = true;
 	boolean update_sh = true;
+	double ContentRand;
 	
 	Parameters params;
 	Agent guardedAgent;
@@ -102,6 +105,11 @@ public class HowlsBodyguard extends HowlsBasePlayer {
 			sh.search(1000);
 		}
 		
+		ContentRand = Math.random();
+		if (day == 1 && sh.gamestate.turn == 1 && ContentRand > 0.5) {
+			return (new Content(new ComingoutContentBuilder(me, Role.SEER))).getText();
+		}
+		
 		int c = 0;
 		c = chooseMostLikelyExecuted(getAliveAgentsCount() * 0.5);
 		if (c == -1) {
@@ -113,7 +121,16 @@ public class HowlsBodyguard extends HowlsBasePlayer {
 		}
 		else {
 			voteCandidate = currentGameInfo.getAgentList().get(c);
-			return (new Content(new EstimateContentBuilder(voteCandidate, Role.WEREWOLF))).getText();
+			ContentRand = Math.random();
+			if (ContentRand <= 0.3) {
+				return (new Content(new VoteContentBuilder(voteCandidate))).getText();
+			}
+			else if (ContentRand > 0.3 && ContentRand <= 0.7) {
+				return (new Content(new EstimateContentBuilder(voteCandidate, Role.WEREWOLF))).getText();
+			}
+			else {
+				return (new Content(new RequestContentBuilder(Content.ANY, new Content(new VoteContentBuilder(voteCandidate))))).getText();
+			}
 		}
 		
 	}

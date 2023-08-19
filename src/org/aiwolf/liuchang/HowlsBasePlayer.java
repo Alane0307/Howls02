@@ -171,7 +171,7 @@ public class HowlsBasePlayer implements Player {
 	@Override
 	public Agent attack() {
 		// TODO Auto-generated method stub
-		return null;
+		return attackVote();
 	}
 
 	@Override
@@ -362,6 +362,10 @@ public class HowlsBasePlayer implements Player {
 	@Override
 	public String talk() {
 		// TODO Auto-generated method stub
+		return chooseTalk();
+	}
+	
+	protected String chooseTalk() {
 		return null;
 	}
 
@@ -507,12 +511,23 @@ public class HowlsBasePlayer implements Player {
 	@Override
 	public Agent vote() {
 		// TODO Auto-generated method stub
-		return null;
+		return chooseVote();
 	}
 
 	@Override
 	public String whisper() {
 		// TODO Auto-generated method stub
+		return Talk.SKIP;
+	}
+	
+	protected void chooseVoteCandidate() {
+	}
+	
+	protected Agent chooseVote() {
+		return null;
+	}
+	
+	protected Agent attackVote() {
 		return null;
 	}
 
